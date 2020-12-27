@@ -2,24 +2,23 @@ package JMTemplate.io;
 
 import arc.Core;
 import arc.Net;
-import arc.util.Log;
 import arc.util.serialization.Jval;
 
 import static JMTemplate.Vars.*;
 
 public class Updater {
-    private static Integer temp = null;
+    private static volatile String tempString;
 
     public int versionCheck(){
-        Core.net.httpGet("https://raw.githubusercontent.com/" + repositoryURL + "/mod.json", res -> {
+        Core.net.httpGet("https://raw.githubusercontent.com/" + repositoryPath + "/main/mod.json", res -> {
             if (res.getStatus() == Net.HttpStatus.OK) {
-                Jval jval = Jval.read(res.getResultAsString());
-                temp = jval.getInt("version", 1);
+                tempString = res.getResultAsString();
             }} , error -> {});
 
-        while (temp == null){}
-        int version = temp;
-        temp = null;
+        while (tempString == null){}
+        Jval jval = Jval.read(tempString);
+        int version = jval.getInt("version", 1);
+        tempString = null;
 
         return version;
     }

@@ -4,6 +4,6 @@
   "author": "AmateurPotion",
   "main": "JMTemplate.core.Main",
   "description": "A jar mod.",
-  "version": 1,
+  "version": 2,
   "minGameVersion": 122
 }

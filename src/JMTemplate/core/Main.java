@@ -1,16 +1,18 @@
 package JMTemplate.core;
 
-import arc.Events;
+import java.io.IOException;
+import JMTemplate.io.*;
 
-import arc.Input;
+import arc.Events;
 import arc.util.Log;
 import arc.util.serialization.Jval;
 import mindustry.game.EventType.*;
 import mindustry.mod.Mod;
 
-import JMTemplate.io.*;
-
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 
 import static JMTemplate.Vars.*;
 
@@ -37,14 +39,19 @@ public class Main extends Mod {
     public void loadContent(){
     }
 
-    private void updateCheck(){
-        InputStream IS = getClass().getResourceAsStream("/mod.json");
-        Jval jval = Jval.read(String.valueOf(IS));
+    private void updateCheck() {
+        InputStream is = getClass().getResourceAsStream("/mod.json");
+        Jval jval = Jval.read(new InputStreamReader(is, StandardCharsets.UTF_8));
+
         int currentVersion = jval.getInt("version",1);
+        Log.info(currentVersion);
+
         if(onlineMode) {
             int repoVersion = new Updater().versionCheck();
             if(currentVersion < repoVersion) {
                 Log.info("@updater.newversion");
+            } else {
+                Log.info("latest");
             }
         } else {
             Log.info("@updater.notonline");
